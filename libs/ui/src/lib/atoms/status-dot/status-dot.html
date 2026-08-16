@@ -1,0 +1,8 @@
+<span class="lib-status" [attr.aria-label]="label()" role="status">
+  <span
+    class="lib-status__dot"
+    [class]="'lib-status__dot lib-status__dot--' + status()"
+    aria-hidden="true"
+  ></span>
+  <span class="lib-status__label">{{ label() }}</span>
+</span>

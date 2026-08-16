@@ -1,0 +1,14 @@
+<lib-dashboard-shell>
+  <lib-workspace-sidebar dashboard-sidebar />
+  <lib-workspace-header dashboard-header />
+  <lib-foundation-panel
+    dashboard-content
+    [title]="title"
+    [description]="description"
+  />
+</lib-dashboard-shell>
+
+<!-- Keep the Issue #4 web-to-data graph edge without exposing the generated data stub. -->
+@if (preserveDataDependency) {
+<lib-data />
+}

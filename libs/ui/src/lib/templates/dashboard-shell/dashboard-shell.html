@@ -1,0 +1,11 @@
+<div class="app-shell">
+  <aside class="app-shell__sidebar">
+    <ng-content select="[dashboard-sidebar]" />
+  </aside>
+  <section class="app-shell__workspace">
+    <ng-content select="[dashboard-header]" />
+    <main class="app-shell__content">
+      <ng-content select="[dashboard-content]" />
+    </main>
+  </section>
+</div>

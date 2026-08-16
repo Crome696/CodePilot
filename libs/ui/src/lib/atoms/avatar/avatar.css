@@ -1,0 +1,38 @@
+:host {
+  display: inline-flex;
+}
+
+.lib-avatar {
+  align-items: center;
+  background: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  color: var(--color-foreground);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.lib-avatar--sm {
+  height: 1.75rem;
+  width: 1.75rem;
+}
+
+.lib-avatar--md {
+  height: 2.25rem;
+  width: 2.25rem;
+}
+
+.lib-avatar--lg {
+  height: 3rem;
+  width: 3rem;
+}
+
+img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
