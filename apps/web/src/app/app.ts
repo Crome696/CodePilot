@@ -1,15 +1,33 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { Data } from 'data';
-import { Ui } from 'ui';
-import { NxWelcome } from './nx-welcome';
+import {
+  Avatar,
+  Badge,
+  Card,
+  CardSection,
+  Input,
+  NavItem,
+  Separator,
+  StatusDot,
+} from 'ui';
 
 @Component({
-  imports: [NxWelcome, RouterModule, Ui, Data],
+  imports: [
+    Avatar,
+    Badge,
+    Card,
+    CardSection,
+    Data,
+    Input,
+    NavItem,
+    Separator,
+    StatusDot,
+  ],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
-  protected title = 'web';
+  protected readonly title = 'CodePilot';
+  protected readonly preserveDataDependency = false;
 }
