@@ -7,7 +7,7 @@ coverage/
 tmp/
 
 *.log
-pnpm-debug.log*
+npm-debug.log*
 
 .env
 .env.*

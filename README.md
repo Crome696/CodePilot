@@ -2,19 +2,20 @@
 
 ## Development
 
-CodePilot is an Nx monorepo managed with pnpm. It contains the Angular
-application `web` and the shared Angular libraries `ui` and `data`.
+CodePilot is an Nx monorepo managed with npm. It contains the Angular
+application `web` in `apps/web`, the Playwright project `web-e2e` in
+`apps/web-e2e`, and the shared Angular libraries `ui` and `data` in `libs/`.
 
 ### Install
 
 ```bash
-pnpm install
+npm install
 ```
 
 ### Serve the web application
 
 ```bash
-pnpm nx serve web
+npm exec -- nx serve web
 ```
 
 The application is available at `http://localhost:4200`.
@@ -22,7 +23,7 @@ The application is available at `http://localhost:4200`.
 ### Build the web application
 
 ```bash
-pnpm nx build web
+npm exec -- nx build web
 ```
 
 The production build is written to `dist/web`.
@@ -30,16 +31,16 @@ The production build is written to `dist/web`.
 ### Run tests
 
 ```bash
-pnpm nx test web
-pnpm nx test ui
-pnpm nx test data
+npm exec -- nx test web
+npm exec -- nx test ui
+npm exec -- nx test data
 ```
 
 ### Inspect the project graph
 
 ```bash
-pnpm nx show projects
-pnpm nx graph
+npm exec -- nx show projects
+npm exec -- nx graph
 ```
 
 The `web` application imports the public APIs of `ui` and `data`, so the Nx
