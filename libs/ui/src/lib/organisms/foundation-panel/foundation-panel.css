@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.foundation {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.foundation-card {
+  max-width: 38rem;
+  width: 100%;
+}
+
+h1 {
+  color: var(--color-foreground);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  letter-spacing: -0.045em;
+  margin: 1rem 0 0.75rem;
+}
+
+p {
+  color: var(--color-secondary-foreground);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 34rem;
+}
+
+@media (max-width: 32rem) {
+  .foundation {
+    padding: 1rem;
+  }
+}

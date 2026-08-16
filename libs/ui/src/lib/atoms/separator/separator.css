@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+.lib-separator {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 0;
+}

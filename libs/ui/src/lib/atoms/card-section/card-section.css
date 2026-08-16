@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+.lib-card-section {
+  padding: 1rem;
+}
+
+:host + :host .lib-card-section {
+  border-top: 1px solid var(--color-border);
+}

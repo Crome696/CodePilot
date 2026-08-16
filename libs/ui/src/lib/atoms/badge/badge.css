@@ -1,0 +1,46 @@
+:host {
+  display: inline-flex;
+}
+
+.lib-badge {
+  align-items: center;
+  background: var(--color-secondary);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--color-secondary-foreground);
+  display: inline-flex;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.3125rem 0.5rem;
+}
+
+.lib-badge--success {
+  background: var(--color-success);
+  color: var(--color-foreground);
+}
+
+.lib-badge--warning {
+  background: var(--color-warning);
+  color: var(--color-background);
+}
+
+.lib-badge--error {
+  background: var(--color-error);
+  color: var(--color-foreground);
+}
+
+.lib-badge--outline {
+  background: transparent;
+  border-color: var(--color-border);
+}
+
+.lib-badge--blue {
+  background: var(--color-accent-blue);
+  color: var(--color-foreground);
+}
+
+.lib-badge--violet {
+  background: var(--color-accent-violet);
+  color: var(--color-foreground);
+}

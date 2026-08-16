@@ -1,0 +1,9 @@
+<label class="lib-input">
+  <span class="lib-input__leading"><ng-content select="[leading-icon]" /></span>
+  <input
+    [attr.type]="type()"
+    [attr.placeholder]="placeholder()"
+    [value]="value()"
+    [disabled]="disabled()"
+  />
+</label>

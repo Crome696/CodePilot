@@ -1,0 +1,12 @@
+<button
+  class="lib-nav-item"
+  [class.lib-nav-item--active]="active()"
+  [disabled]="disabled()"
+  type="button"
+  [attr.aria-current]="active() ? 'page' : null"
+>
+  <span class="lib-nav-item__icon" aria-hidden="true">
+    <ng-content select="[nav-icon]" />
+  </span>
+  <span>{{ label() }}</span>
+</button>

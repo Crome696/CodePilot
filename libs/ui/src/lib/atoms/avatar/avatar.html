@@ -1,0 +1,7 @@
+<span class="lib-avatar" [class]="'lib-avatar lib-avatar--' + size()">
+  @if (src()) {
+  <img [src]="src()" [alt]="alt()" />
+  } @else {
+  <span aria-hidden="true">{{ initials() }}</span>
+  }
+</span>

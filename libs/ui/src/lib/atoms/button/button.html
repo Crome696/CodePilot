@@ -1,0 +1,8 @@
+<button
+  class="lib-button"
+  [class]="'lib-button lib-button--' + variant() + ' lib-button--' + size()"
+  [disabled]="disabled()"
+  [attr.type]="type()"
+>
+  <ng-content />
+</button>
