@@ -1,1 +1,67 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --color-background: #0f1115;
+  --color-card: #161b22;
+  --color-secondary: #21262d;
+  --color-foreground: #e1e4e8;
+  --color-secondary-foreground: #c9d1d9;
+  --color-muted: #8b949e;
+  --color-primary: #58a6ff;
+  --color-accent-blue: #2f81f7;
+  --color-accent-violet: #8250df;
+  --color-success: #238636;
+  --color-warning: #d29922;
+  --color-error: #da3633;
+  --color-border: #30363d;
+  --color-ring: #58a6ff;
+  --font-sans: Inter, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+  color-scheme: dark;
+  font-family: var(--font-sans);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-width: 20rem;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+* {
+  scrollbar-color: var(--color-border) var(--color-background);
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+  height: 0.625rem;
+  width: 0.625rem;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
