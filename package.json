@@ -1,5 +1,21 @@
 {
+  "name": "codepilot",
+  "private": true,
   "workspaces": ["apps/*", "libs/*"],
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0",
+    "npm": ">=8"
+  },
+  "scripts": {
+    "build": "nx run web:build",
+    "serve": "nx run web:serve",
+    "serve:static": "nx run web:serve-static",
+    "lint": "nx run-many --target=lint --projects=web,web-e2e,ui,data",
+    "test": "nx run-many --target=test --projects=web,ui,data",
+    "e2e": "nx run web-e2e:e2e",
+    "e2e:install": "playwright install",
+    "projects": "nx show projects"
+  },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "~2.6.0",
     "@analogjs/vitest-angular": "~2.6.0",
