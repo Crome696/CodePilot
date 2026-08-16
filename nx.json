@@ -4,7 +4,6 @@
   "targetDefaults": {
     "@angular/build:application": {
       "cache": true,
-      "dependsOn": ["^build"],
       "inputs": ["default", "^default"]
     },
     "@nx/eslint:lint": {
