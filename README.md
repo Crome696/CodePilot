@@ -107,6 +107,30 @@ Run it manually from the repository root:
 npm run maintenance:update
 ```
 
+### Opt-in live CLI checks
+
+The adapter connectivity checks are manual integration checks and never run
+from `npm test`, `npm run quality`, Nx targets, or CI. Each command is
+independent and uses the CLI's normal local authentication flow:
+
+```bash
+npm run test:live:github
+npm run test:live:cursor
+npm run test:live:codex
+```
+
+The checks are read-only. The GitHub check only queries repository metadata;
+the Cursor check uses the `agent` CLI with model `Auto` and an ask-mode
+non-mutating prompt; the Codex check uses model `gpt 5.6 Luna (low)` with an
+ephemeral `read-only` sandbox. Missing CLIs, authentication failures,
+unavailable models, timeouts, non-zero exits, and malformed output are
+reported without printing credentials. The deterministic harness can be run
+without any installed CLI or credentials:
+
+```bash
+npm run test:live:unit
+```
+
 For Windows Task Scheduler, create a recurring task that starts in the
 repository directory and runs `npm.cmd` with the argument
 `run maintenance:update`. Use a user account that can read and write the
