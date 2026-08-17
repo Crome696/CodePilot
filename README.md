@@ -62,14 +62,64 @@ The project list must contain `web`, `web-e2e`, `ui`, and `data`. The
 Playwright plugin infers the `e2e` target for `web-e2e` from its
 `playwright.config.mts` file.
 
+### Quality checks
+
+The repository-owned quality commands are:
+
+```bash
+npm run lint
+npm run format:check
+npm run format:write
+npm run security:check
+npm run quality
+```
+
+`npm run quality` runs linting, the read-only Prettier check, the high-severity
+dependency audit, maintenance-updater tests, and the Nx unit-test targets.
+Formatting changes are intentionally a separate opt-in operation through
+`npm run format:write`.
+
+### Local pre-commit hook
+
+Install the tracked hook once per checkout:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The hook runs `npm run lint` and `npm run format:check` before every commit.
+It is intentionally local and does not contact GitHub or create any commit on
+its own.
+
+### Scheduled dependency maintenance
+
+`npm run maintenance:update` updates only the allowlisted quality and test
+tooling within the existing semver ranges, including the lockfile. The current
+allowlist covers Nx and Angular/Nx builders, ESLint and its TypeScript/Prettier
+integration, Prettier, TypeScript, Vitest, and Playwright. It refuses to start
+when the working tree is dirty, rejects an observed major-version change, runs
+the complete quality check afterwards, and never commits or pushes changes.
+
+Run it manually from the repository root:
+
+```bash
+npm run maintenance:update
+```
+
+For Windows Task Scheduler, create a recurring task that starts in the
+repository directory and runs `npm.cmd` with the argument
+`run maintenance:update`. Use a user account that can read and write the
+checkout, and review the resulting `package.json`/`package-lock.json` diff
+before committing the update.
+
 ### Target contract
 
-| Project | Supported targets | Not applicable |
-| --- | --- | --- |
-| `web` | `build`, `serve`, `serve-static`, `lint`, `test` | `e2e` |
-| `ui` | `lint`, `test` | `build`, `serve`, `serve-static`, `e2e` |
-| `data` | `lint`, `test` | `build`, `serve`, `serve-static`, `e2e` |
-| `web-e2e` | plugin-inferred `lint`, plugin-inferred `e2e` | `build`, `serve`, `serve-static`, `test` |
+| Project   | Supported targets                                | Not applicable                           |
+| --------- | ------------------------------------------------ | ---------------------------------------- |
+| `web`     | `build`, `serve`, `serve-static`, `lint`, `test` | `e2e`                                    |
+| `ui`      | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
+| `data`    | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
+| `web-e2e` | plugin-inferred `lint`, plugin-inferred `e2e`    | `build`, `serve`, `serve-static`, `test` |
 
 `ui` and `data` are source-only libraries. They are consumed by the `web`
 application and are not separate packaged build outputs, so the application

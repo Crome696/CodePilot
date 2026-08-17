@@ -1,7 +1,10 @@
 {
   "name": "codepilot",
   "private": true,
-  "workspaces": ["apps/*", "libs/*"],
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || >=26.0.0",
     "npm": ">=8"
@@ -12,6 +15,12 @@
     "serve:static": "nx run web:serve-static",
     "lint": "nx run-many --target=lint --projects=web,web-e2e,ui,data",
     "test": "nx run-many --target=test --projects=web,ui,data",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+    "security:check": "npm audit --audit-level=high",
+    "test:maintenance": "node --test tools/maintenance-updater.test.mjs",
+    "quality": "npm run lint && npm run format:check && npm run test:maintenance && npm test && npm run security:check",
+    "maintenance:update": "node tools/maintenance-updater.mjs",
     "e2e": "nx run web-e2e:e2e",
     "e2e:install": "playwright install",
     "projects": "nx show projects"
