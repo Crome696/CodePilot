@@ -5,7 +5,7 @@
 CodePilot is an Nx monorepo managed with npm. It contains the Angular
 application `web` in `apps/web`, the Playwright project `web-e2e` in
 `apps/web-e2e`, the shared Angular libraries `ui` and `data`, and the
-server-side GitHub CLI library `github` in `libs/`.
+server-side `github` and `cursor` CLI libraries in `libs/`.
 
 ### Prerequisites
 
@@ -59,8 +59,8 @@ npm exec -- nx show project web-e2e
 npm exec -- nx run web:build
 ```
 
-The project list must contain `web`, `web-e2e`, `ui`, `data`, and `github`. The
-Playwright plugin infers the `e2e` target for `web-e2e` from its
+The project list must contain `web`, `web-e2e`, `ui`, `data`, `github`, and
+`cursor`; the Playwright plugin infers the `e2e` target for `web-e2e` from its
 `playwright.config.mts` file.
 
 ### Quality checks
@@ -121,12 +121,14 @@ before committing the update.
 | `ui`      | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
 | `data`    | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
 | `github`  | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
+| `cursor`  | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
 | `web-e2e` | plugin-inferred `lint`, plugin-inferred `e2e`    | `build`, `serve`, `serve-static`, `test` |
 
-`ui`, `data`, and `github` are source-only libraries. The Angular libraries
-are consumed by the `web` application; `github` is consumed by server-side
-CodePilot integrations. None are separate packaged build outputs, so the
-application build does not depend on undeclared library `build` targets.
+`ui`, `data`, `github`, and `cursor` are source-only libraries. The Angular
+libraries are consumed by the `web` application; `github` and `cursor` are
+consumed by server-side CodePilot integrations. None are separate packaged
+build outputs, so the application build does not depend on undeclared library
+`build` targets.
 
 ### Editor tasks
 
