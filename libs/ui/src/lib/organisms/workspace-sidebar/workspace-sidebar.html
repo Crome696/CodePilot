@@ -9,7 +9,7 @@
   </div>
 
   <nav class="sidebar__nav" aria-label="Primary navigation">
-    @for (item of items(); track item.label) {
+    @for (item of items(); track item.id) {
     <lib-nav-item [label]="item.label" [active]="item.label === activeItem()">
       @switch (item.icon) { @case ('overview') {
       <svg

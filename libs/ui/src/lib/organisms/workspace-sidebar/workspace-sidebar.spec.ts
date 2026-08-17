@@ -21,4 +21,17 @@ describe('WorkspaceSidebar', () => {
       fixture.nativeElement.querySelector('lib-workspace-profile'),
     ).toBeTruthy();
   });
+
+  it('tracks custom navigation items by id when labels repeat', () => {
+    const fixture = TestBed.createComponent(WorkspaceSidebar);
+    fixture.componentRef.setInput('items', [
+      { id: 'open-issues', label: 'Issues', icon: 'issues' },
+      { id: 'closed-issues', label: 'Issues', icon: 'issues' },
+    ]);
+
+    expect(() => fixture.detectChanges()).not.toThrow();
+    expect(fixture.nativeElement.querySelectorAll('lib-nav-item')).toHaveLength(
+      2,
+    );
+  });
 });

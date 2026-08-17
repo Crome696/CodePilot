@@ -15,19 +15,20 @@ export type NavigationIcon =
   | 'settings';
 
 export interface NavigationItem {
+  readonly id: string;
   readonly label: string;
   readonly icon: NavigationIcon;
 }
 
 export const DEFAULT_NAV_ITEMS: readonly NavigationItem[] = [
-  { label: 'Overview', icon: 'overview' },
-  { label: 'Repositories', icon: 'repositories' },
-  { label: 'Issues', icon: 'issues' },
-  { label: 'Pull Requests', icon: 'pull-requests' },
-  { label: 'Commits', icon: 'commits' },
-  { label: 'Branches', icon: 'branches' },
-  { label: 'Validation', icon: 'validation' },
-  { label: 'Settings', icon: 'settings' },
+  { id: 'overview', label: 'Overview', icon: 'overview' },
+  { id: 'repositories', label: 'Repositories', icon: 'repositories' },
+  { id: 'issues', label: 'Issues', icon: 'issues' },
+  { id: 'pull-requests', label: 'Pull Requests', icon: 'pull-requests' },
+  { id: 'commits', label: 'Commits', icon: 'commits' },
+  { id: 'branches', label: 'Branches', icon: 'branches' },
+  { id: 'validation', label: 'Validation', icon: 'validation' },
+  { id: 'settings', label: 'Settings', icon: 'settings' },
 ];
 
 @Component({
