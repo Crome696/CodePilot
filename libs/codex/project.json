@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "codex",
+  "sourceRoot": "libs/codex/src",
+  "projectType": "library",
+  "tags": ["type:server", "scope:codex"],
+  "targets": {
+    "test": { "executor": "@nx/vitest:test", "outputs": ["{options.reportsDirectory}"], "options": { "reportsDirectory": "coverage/codex" } },
+    "lint": { "executor": "@nx/eslint:lint" }
+  }
+}
