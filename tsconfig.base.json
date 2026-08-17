@@ -16,7 +16,8 @@
     "strict": false,
     "paths": {
       "ui": ["./libs/ui/src/index.ts"],
-      "data": ["./libs/data/src/index.ts"]
+      "data": ["./libs/data/src/index.ts"],
+      "github": ["./libs/github/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -4,7 +4,8 @@
 
 CodePilot is an Nx monorepo managed with npm. It contains the Angular
 application `web` in `apps/web`, the Playwright project `web-e2e` in
-`apps/web-e2e`, and the shared Angular libraries `ui` and `data` in `libs/`.
+`apps/web-e2e`, the shared Angular libraries `ui` and `data`, and the
+server-side GitHub CLI library `github` in `libs/`.
 
 ### Prerequisites
 
@@ -58,7 +59,7 @@ npm exec -- nx show project web-e2e
 npm exec -- nx run web:build
 ```
 
-The project list must contain `web`, `web-e2e`, `ui`, and `data`. The
+The project list must contain `web`, `web-e2e`, `ui`, `data`, and `github`. The
 Playwright plugin infers the `e2e` target for `web-e2e` from its
 `playwright.config.mts` file.
 
@@ -119,11 +120,13 @@ before committing the update.
 | `web`     | `build`, `serve`, `serve-static`, `lint`, `test` | `e2e`                                    |
 | `ui`      | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
 | `data`    | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
+| `github`  | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
 | `web-e2e` | plugin-inferred `lint`, plugin-inferred `e2e`    | `build`, `serve`, `serve-static`, `test` |
 
-`ui` and `data` are source-only libraries. They are consumed by the `web`
-application and are not separate packaged build outputs, so the application
-build does not depend on undeclared library `build` targets.
+`ui`, `data`, and `github` are source-only libraries. The Angular libraries
+are consumed by the `web` application; `github` is consumed by server-side
+CodePilot integrations. None are separate packaged build outputs, so the
+application build does not depend on undeclared library `build` targets.
 
 ### Editor tasks
 
