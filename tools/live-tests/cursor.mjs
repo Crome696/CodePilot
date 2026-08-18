@@ -1,5 +1,4 @@
-import { fileURLToPath } from 'node:url';
-import { diagnosticFor, printFailure, runCommand } from './common.mjs';
+import { diagnosticFor, isMain, printFailure, runCommand } from './common.mjs';
 
 export const CURSOR_MODEL = 'Auto';
 export const CURSOR_EXECUTABLE =
@@ -71,7 +70,7 @@ export async function runCursorLive({ runner = runCommand } = {}) {
   return 0;
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+if (isMain(import.meta.url)) {
   runCursorLive()
     .then((code) => (process.exitCode = code))
     .catch((error) => {

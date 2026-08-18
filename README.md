@@ -4,8 +4,9 @@
 
 CodePilot is an Nx monorepo managed with npm. It contains the Angular
 application `web` in `apps/web`, the Playwright project `web-e2e` in
-`apps/web-e2e`, the shared Angular libraries `ui` and `data`, and the
-server-side `github` and `cursor` CLI libraries in `libs/`.
+`apps/web-e2e`, the shared Angular library `ui`, the shared data library
+`data`, and the server-side `github`, `cursor`, and `codex` CLI libraries in
+`libs/`.
 
 ### Prerequisites
 
@@ -59,9 +60,9 @@ npm exec -- nx show project web-e2e
 npm exec -- nx run web:build
 ```
 
-The project list must contain `web`, `web-e2e`, `ui`, `data`, `github`, and
-`cursor`; the Playwright plugin infers the `e2e` target for `web-e2e` from its
-`playwright.config.mts` file.
+The project list must contain `web`, `web-e2e`, `ui`, `data`, `github`,
+`cursor`, and `codex`; the Playwright plugin infers the `e2e` target for
+`web-e2e` from its `playwright.config.mts` file.
 
 ### Quality checks
 
@@ -122,7 +123,10 @@ npm run test:live:codex
 The checks are read-only. The GitHub check only queries repository metadata;
 the Cursor check uses `agent` (`agent.cmd` on Windows) with model `Auto`,
 `--mode=ask`, `--trust`, and a non-mutating prompt; the Codex check uses model
-`gpt 5.6 Luna (low)` with an ephemeral `read-only` sandbox. Missing CLIs, authentication failures,
+`gpt 5.6 Luna (low)` with an ephemeral `read-only` sandbox and ignores optional
+user configuration so local MCP servers do not become an unrelated dependency.
+Codex authentication still uses the local CLI credentials. Missing CLIs,
+authentication failures,
 unavailable models, timeouts, non-zero exits, and malformed output are
 reported without printing credentials. The deterministic harness can be run
 without any installed CLI or credentials:
@@ -146,13 +150,14 @@ before committing the update.
 | `data`    | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
 | `github`  | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
 | `cursor`  | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
+| `codex`   | `lint`, `test`                                   | `build`, `serve`, `serve-static`, `e2e`  |
 | `web-e2e` | plugin-inferred `lint`, plugin-inferred `e2e`    | `build`, `serve`, `serve-static`, `test` |
 
-`ui`, `data`, `github`, and `cursor` are source-only libraries. The Angular
-libraries are consumed by the `web` application; `github` and `cursor` are
-consumed by server-side CodePilot integrations. None are separate packaged
-build outputs, so the application build does not depend on undeclared library
-`build` targets.
+`ui`, `data`, `github`, `cursor`, and `codex` are source-only libraries. The
+Angular libraries are consumed by the `web` application; `github`, `cursor`,
+and `codex` are consumed by server-side CodePilot integrations. None are
+separate packaged build outputs, so the application build does not depend on
+undeclared library `build` targets.
 
 ### Editor tasks
 
