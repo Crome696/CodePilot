@@ -52,6 +52,7 @@ describe('buildCursorCliArgs', () => {
         fast: true,
       },
       mode: 'plan',
+      trust: true,
       capabilities: {
         skills: ['development:typescript-docs-reference'],
         plugins: ['github'],
@@ -68,6 +69,7 @@ describe('buildCursorCliArgs', () => {
     }
 
     expect(result.data).toContain('--mode=plan');
+    expect(result.data).toContain('--trust');
     expect(result.data).toEqual(
       expect.arrayContaining(['--model', 'GPT-5.6 Sol Extra High Fast']),
     );
@@ -117,6 +119,22 @@ describe('buildCursorCliArgs', () => {
       ok: false,
       error: { category: 'validation' },
     });
+  });
+
+  it('passes explicit workspace trust without enabling mutation', () => {
+    const result = buildCursorCliArgs({
+      prompt: 'Explain the current implementation.',
+      mode: 'ask',
+      trust: true,
+    });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(result.data).toContain('--trust');
+    expect(result.data).not.toContain('--force');
+    expect(result.data).not.toContain('--yolo');
   });
 });
 

@@ -120,9 +120,9 @@ npm run test:live:codex
 ```
 
 The checks are read-only. The GitHub check only queries repository metadata;
-the Cursor check uses the `agent` CLI with model `Auto` and an ask-mode
-non-mutating prompt; the Codex check uses model `gpt 5.6 Luna (low)` with an
-ephemeral `read-only` sandbox. Missing CLIs, authentication failures,
+the Cursor check uses `agent` (`agent.cmd` on Windows) with model `Auto`,
+`--mode=ask`, `--trust`, and a non-mutating prompt; the Codex check uses model
+`gpt 5.6 Luna (low)` with an ephemeral `read-only` sandbox. Missing CLIs, authentication failures,
 unavailable models, timeouts, non-zero exits, and malformed output are
 reported without printing credentials. The deterministic harness can be run
 without any installed CLI or credentials:

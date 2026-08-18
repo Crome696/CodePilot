@@ -44,6 +44,9 @@ export function buildCursorCliArgs(
   if (mode !== undefined && mode !== 'agent') {
     args.push(`--mode=${mode}`);
   }
+  if (input.trust === true) {
+    args.push('--trust');
+  }
   if (input.model !== undefined) {
     args.push('--model', formatCursorModel(input.model));
   }

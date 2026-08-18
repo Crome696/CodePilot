@@ -1,6 +1,14 @@
-import { CursorCommandRunner } from './command-runner';
+import {
+  CursorCommandRunner,
+  getDefaultCursorExecutable,
+} from './command-runner';
 
 describe('CursorCommandRunner', () => {
+  it('selects the Windows .cmd launcher while preserving the Unix launcher', () => {
+    expect(getDefaultCursorExecutable('win32')).toBe('agent.cmd');
+    expect(getDefaultCursorExecutable('linux')).toBe('agent');
+  });
+
   it('passes values as arguments without shell interpretation', async () => {
     const runner = new CursorCommandRunner({ executable: process.execPath });
     const value = '$(not-a-command); & do-not-run';

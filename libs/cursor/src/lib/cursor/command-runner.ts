@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { delimiter, isAbsolute, join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { CursorCommandRunnerError } from './errors';
 import type {
@@ -15,6 +17,69 @@ export interface CursorCommandRunnerOptions {
 
 const DEFAULT_TIMEOUT_MS = 5 * 60 * 1000;
 
+export function getDefaultCursorExecutable(
+  platform: NodeJS.Platform = process.platform,
+): string {
+  return platform === 'win32' ? 'agent.cmd' : 'agent';
+}
+
+function resolvePowerShellScript(
+  executable: string,
+  env: NodeJS.ProcessEnv,
+): string | null {
+  if (!/\.cmd$/i.test(executable)) {
+    return null;
+  }
+
+  const script = executable.replace(/\.cmd$/i, '.ps1');
+  const candidates = isAbsolute(executable)
+    ? [script]
+    : (env.Path ?? env.PATH ?? '')
+        .split(delimiter)
+        .filter(Boolean)
+        .map((directory) => join(directory, script));
+
+  return candidates.find((candidate) => existsSync(candidate)) ?? null;
+}
+
+function buildProcessInvocation(
+  executable: string,
+  args: readonly string[],
+  env: NodeJS.ProcessEnv,
+): { readonly executable: string; readonly args: readonly string[] } | null {
+  if (process.platform !== 'win32' || !/\.cmd$/i.test(executable)) {
+    return { executable, args };
+  }
+
+  const script = resolvePowerShellScript(executable, env);
+  if (script === null) {
+    return null;
+  }
+
+  const systemRoot = env.SystemRoot ?? process.env.SystemRoot;
+  const powershell = systemRoot
+    ? join(
+        systemRoot,
+        'System32',
+        'WindowsPowerShell',
+        'v1.0',
+        'powershell.exe',
+      )
+    : 'powershell.exe';
+
+  return {
+    executable: powershell,
+    args: [
+      '-NoProfile',
+      '-ExecutionPolicy',
+      'Bypass',
+      '-File',
+      script,
+      ...args,
+    ],
+  };
+}
+
 /**
  * Runs Cursor Agent without a shell. Consumers can inject this boundary in
  * tests so command construction and parsing never require a live account.
@@ -26,7 +91,8 @@ export class CursorCommandRunner implements CursorCommandRunnerLike {
   private readonly env: NodeJS.ProcessEnv | undefined;
 
   constructor(options: CursorCommandRunnerOptions = {}) {
-    this.executable = options.executable ?? 'agent';
+    this.executable =
+      options.executable ?? getDefaultCursorExecutable(process.platform);
     this.timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
     this.cwd = options.cwd;
     this.env = options.env;
@@ -66,7 +132,18 @@ export class CursorCommandRunner implements CursorCommandRunnerLike {
         reject(error);
       };
 
-      const child = spawn(this.executable, [...args], {
+      const invocation = buildProcessInvocation(this.executable, args, env);
+      if (invocation === null) {
+        settleWithError(
+          new CursorCommandRunnerError(
+            'executable_unavailable',
+            `The Cursor CLI PowerShell launcher for '${this.executable}' is unavailable.`,
+          ),
+        );
+        return;
+      }
+
+      const child = spawn(invocation.executable, [...invocation.args], {
         cwd,
         env,
         shell: false,
