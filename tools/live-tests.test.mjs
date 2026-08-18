@@ -30,14 +30,15 @@ test('GitHub command sequence is read-only and targets CodePilot', () => {
 test('Cursor command pins Auto and forbids mutation', () => {
   const command = buildCursorCommand();
   assert.equal(command.executable, WINDOWS ? 'agent.cmd' : 'agent');
-  assert.deepEqual(command.args.slice(0, 7), [
+  assert.deepEqual(command.args.slice(0, 8), [
     '--print',
     '--output-format',
     'json',
     '--mode=ask',
+    '--trust',
     '--model',
     'Auto',
-    command.args[6],
+    command.args[7],
   ]);
   assert.match(command.args.at(-1), /Do not modify files/);
   assert.ok(!command.args.includes('--force'));

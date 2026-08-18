@@ -53,6 +53,8 @@ export interface CursorRunInput {
   readonly capabilities?: CursorCapabilitySelection;
   /** Defaults to `json` for stable programmatic consumption. */
   readonly outputFormat?: CursorOutputFormat;
+  /** Trust the current workspace without enabling write or shell approval. */
+  readonly trust?: boolean;
   /** Allow write/terminal actions that would otherwise require approval. */
   readonly force?: boolean;
   /** Cursor's non-interactive approval shortcut. */
@@ -96,7 +98,7 @@ export interface CursorCommandRunnerLike {
 
 export interface CursorCliClientOptions {
   readonly runner?: CursorCommandRunnerLike;
-  /** Defaults to `agent`; `cursor-agent` remains a supported alias. */
+  /** Defaults to `agent` or `agent.cmd` on Windows; `cursor-agent` remains a supported alias. */
   readonly executable?: string;
   readonly timeoutMs?: number;
   readonly cwd?: string;

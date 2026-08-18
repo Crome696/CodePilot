@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { delimiter, isAbsolute, join } from 'node:path';
 import { spawn } from 'node:child_process';
 
 export const DEFAULT_TIMEOUT_MS = 120_000;
@@ -20,6 +22,63 @@ export function sanitizeDiagnostic(value) {
 
 export function commandLabel(executable, args) {
   return [executable, ...args].join(' ');
+}
+
+function resolvePowerShellScript(executable, env) {
+  if (!/\.cmd$/i.test(executable)) {
+    return null;
+  }
+
+  const script = executable.replace(/\.cmd$/i, '.ps1');
+  const candidates = isAbsolute(executable)
+    ? [script]
+    : (env.Path ?? env.PATH ?? '')
+        .split(delimiter)
+        .filter(Boolean)
+        .map((directory) => join(directory, script));
+
+  return candidates.find((candidate) => existsSync(candidate)) ?? null;
+}
+
+export function buildSpawnCommand(executable, args, options = {}) {
+  if (
+    process.platform !== 'win32' ||
+    options.windowsPowerShell !== true ||
+    !/\.cmd$/i.test(executable)
+  ) {
+    return { executable, args };
+  }
+
+  const script = resolvePowerShellScript(
+    executable,
+    options.env ?? process.env,
+  );
+  if (script === null) {
+    return null;
+  }
+
+  const systemRoot = options.env?.SystemRoot ?? process.env.SystemRoot;
+  const powershell = systemRoot
+    ? join(
+        systemRoot,
+        'System32',
+        'WindowsPowerShell',
+        'v1.0',
+        'powershell.exe',
+      )
+    : 'powershell.exe';
+
+  return {
+    executable: powershell,
+    args: [
+      '-NoProfile',
+      '-ExecutionPolicy',
+      'Bypass',
+      '-File',
+      script,
+      ...args,
+    ],
+  };
 }
 
 function classifyExit(output) {
@@ -58,9 +117,19 @@ export function runCommand(executable, args, options = {}) {
       resolve({ ...result, durationMs: Date.now() - startedAt });
     };
 
+    const command = buildSpawnCommand(executable, args, options);
+    if (command === null) {
+      finish({
+        ok: false,
+        kind: 'cli_unavailable',
+        message: `${executable} has no PowerShell launcher.`,
+      });
+      return;
+    }
+
     let child;
     try {
-      child = spawn(executable, args, {
+      child = spawn(command.executable, command.args, {
         cwd,
         env,
         shell: false,

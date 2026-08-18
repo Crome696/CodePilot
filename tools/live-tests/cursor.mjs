@@ -15,6 +15,7 @@ export function buildCursorCommand() {
       '--output-format',
       'json',
       '--mode=ask',
+      '--trust',
       '--model',
       CURSOR_MODEL,
       CURSOR_PROMPT,
@@ -37,7 +38,9 @@ export async function runCursorLive({ runner = runCommand } = {}) {
   console.log(
     `[cursor] Starting read-only agent check with model ${CURSOR_MODEL}.`,
   );
-  const result = await runner(command.executable, command.args);
+  const result = await runner(command.executable, command.args, {
+    windowsPowerShell: true,
+  });
   if (!result.ok) {
     printFailure('cursor', result);
     return 1;

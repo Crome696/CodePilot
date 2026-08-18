@@ -1,9 +1,10 @@
 # Cursor CLI integration
 
 This library is the server-side Cursor Agent boundary for CodePilot. It uses
-the installed `agent` executable as the transport and credential boundary;
-`cursor-agent` can be selected explicitly for older installations. Browser
-code never spawns processes and callers do not pass API keys through this API.
+the installed `agent` executable as the transport and credential boundary, or
+`agent.cmd` on Windows; `cursor-agent` can be selected explicitly for older
+installations. Browser code never spawns processes and callers do not pass API
+keys through this API.
 
 ## Usage
 
@@ -68,6 +69,11 @@ represented by the model variant that the installed Cursor CLI supports.
 returned session id can be passed to `resume` for the implementation step.
 `run()` also supports `outputFormat: 'text' | 'json' | 'stream-json'` and
 normalizes Cursor's JSON/NDJSON result events into `CursorRunResult`.
+
+When a non-interactive run needs to trust the current workspace, pass
+`trust: true`. This adds Cursor's `--trust` flag without enabling `--force` or
+`--yolo`; workspace trust is therefore explicit and separate from mutation
+approval.
 
 The `capabilities` option adds an explicit selection block to the prompt for
 skills, plugins, MCP servers, subagents, rules, and files. Cursor remains
