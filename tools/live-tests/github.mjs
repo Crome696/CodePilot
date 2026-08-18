@@ -1,5 +1,4 @@
-import { fileURLToPath } from 'node:url';
-import { diagnosticFor, printFailure, runCommand } from './common.mjs';
+import { diagnosticFor, isMain, printFailure, runCommand } from './common.mjs';
 
 export const REPOSITORY = 'Crome696/CodePilot';
 
@@ -82,7 +81,7 @@ export async function runGithubLive({ runner = runCommand } = {}) {
   return 0;
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+if (isMain(import.meta.url)) {
   runGithubLive()
     .then((code) => (process.exitCode = code))
     .catch((error) => {

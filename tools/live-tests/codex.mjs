@@ -1,5 +1,4 @@
-import { fileURLToPath } from 'node:url';
-import { diagnosticFor, printFailure, runCommand } from './common.mjs';
+import { diagnosticFor, isMain, printFailure, runCommand } from './common.mjs';
 
 export const CODEX_MODEL = 'gpt 5.6 Luna (low)';
 export const CODEX_EXECUTABLE =
@@ -12,6 +11,7 @@ export function buildCodexCommand() {
     executable: CODEX_EXECUTABLE,
     args: [
       'exec',
+      '--ignore-user-config',
       '--model',
       CODEX_MODEL,
       '--json',
@@ -59,7 +59,7 @@ export async function runCodexLive({ runner = runCommand } = {}) {
   return 0;
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+if (isMain(import.meta.url)) {
   runCodexLive()
     .then((code) => (process.exitCode = code))
     .catch((error) => {

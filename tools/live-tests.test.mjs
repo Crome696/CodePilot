@@ -1,12 +1,61 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { EventEmitter } from 'node:events';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { buildGithubCommands, runGithubLive } from './live-tests/github.mjs';
 import { buildCursorCommand, runCursorLive } from './live-tests/cursor.mjs';
+import {
+  buildSpawnInvocation,
+  isMain,
+  runCommand,
+} from './live-tests/common.mjs';
 import {
   buildCodexCommand,
   parseJsonl,
   runCodexLive,
 } from './live-tests/codex.mjs';
+
+test('CLI entrypoints resolve relative Windows and Unix script paths', () => {
+  const entrypoint = new URL('./live-tests/codex.mjs', import.meta.url);
+  const absoluteEntrypoint = fileURLToPath(entrypoint);
+  const relativeEntrypoint = path.relative(process.cwd(), absoluteEntrypoint);
+
+  assert.equal(isMain(entrypoint, relativeEntrypoint), true);
+  assert.equal(isMain(entrypoint, absoluteEntrypoint), true);
+});
+
+test('Windows command shims run through ComSpec without enabling a shell', async () => {
+  const calls = [];
+  const spawnImpl = (executable, args, options) => {
+    calls.push({ executable, args, options });
+    const child = new EventEmitter();
+    child.stdout = new EventEmitter();
+    child.stderr = new EventEmitter();
+    child.kill = () => {};
+    queueMicrotask(() => child.emit('close', 0));
+    return child;
+  };
+
+  const result = await runCommand('codex.cmd', ['--version'], {
+    env: { ComSpec: 'C:\\Windows\\System32\\cmd.exe' },
+    platform: 'win32',
+    spawnImpl,
+  });
+
+  assert.equal(result.ok, true);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].executable, 'C:\\Windows\\System32\\cmd.exe');
+  assert.deepEqual(calls[0].args, ['/d', '/s', '/c', 'codex.cmd', '--version']);
+  assert.equal(calls[0].options.shell, false);
+});
+
+test('non-Windows commands keep their direct spawn invocation', () => {
+  assert.deepEqual(
+    buildSpawnInvocation('codex', ['--version'], { platform: 'linux' }),
+    { executable: 'codex', args: ['--version'] },
+  );
+});
 
 const WINDOWS = process.platform === 'win32';
 
@@ -47,15 +96,16 @@ test('Cursor command pins Auto and forbids mutation', () => {
 
 test('Codex command pins the model and enforces read-only ephemeral execution', () => {
   const command = buildCodexCommand();
+  assert.ok(command.args.includes('--ignore-user-config'));
   assert.deepEqual(command.args.slice(0, 8), [
     'exec',
+    '--ignore-user-config',
     '--model',
     'gpt 5.6 Luna (low)',
     '--json',
     '--sandbox',
     'read-only',
     '--ephemeral',
-    command.args[7],
   ]);
   assert.match(command.args.at(-1), /Do not modify files/);
 });

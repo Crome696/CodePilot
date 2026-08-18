@@ -1,6 +1,8 @@
 import { existsSync } from 'node:fs';
 import { delimiter, isAbsolute, join } from 'node:path';
 import { spawn } from 'node:child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export const DEFAULT_TIMEOUT_MS = 120_000;
 
@@ -22,6 +24,29 @@ export function sanitizeDiagnostic(value) {
 
 export function commandLabel(executable, args) {
   return [executable, ...args].join(' ');
+}
+
+export function isMain(metaUrl, argv1 = process.argv[1]) {
+  if (argv1 === undefined) return false;
+  return (
+    path.resolve(argv1).toLowerCase() ===
+    path.resolve(fileURLToPath(metaUrl)).toLowerCase()
+  );
+}
+
+export function buildSpawnInvocation(
+  executable,
+  args,
+  { platform = process.platform, comSpec = process.env.ComSpec } = {},
+) {
+  if (platform !== 'win32' || !/\.(?:cmd|bat)$/i.test(executable)) {
+    return { executable, args };
+  }
+
+  return {
+    executable: comSpec || 'cmd.exe',
+    args: ['/d', '/s', '/c', executable, ...args],
+  };
 }
 
 function resolvePowerShellScript(executable, env) {
@@ -102,6 +127,7 @@ export function runCommand(executable, args, options = {}) {
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   const cwd = options.cwd ?? process.cwd();
   const env = options.env ?? process.env;
+  const spawnImpl = options.spawnImpl ?? spawn;
 
   return new Promise((resolve) => {
     const startedAt = Date.now();
@@ -117,7 +143,13 @@ export function runCommand(executable, args, options = {}) {
       resolve({ ...result, durationMs: Date.now() - startedAt });
     };
 
-    const command = buildSpawnCommand(executable, args, options);
+    const command =
+      options.windowsPowerShell === true
+        ? buildSpawnCommand(executable, args, options)
+        : buildSpawnInvocation(executable, args, {
+            platform: options.platform,
+            comSpec: env.ComSpec,
+          });
     if (command === null) {
       finish({
         ok: false,
@@ -129,7 +161,7 @@ export function runCommand(executable, args, options = {}) {
 
     let child;
     try {
-      child = spawn(command.executable, command.args, {
+      child = spawnImpl(command.executable, command.args, {
         cwd,
         env,
         shell: false,
