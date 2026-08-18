@@ -1,6 +1,6 @@
 export type CodexMode = 'plan' | 'execute';
 export type CodexOutputFormat = 'text' | 'jsonl';
-export type CodexReasoningEffort = 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | (string & {});
+export type CodexReasoningEffort = 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'ultra' | (string & {});
 export type CodexModel = string;
 export interface CodexRunInput { readonly prompt: string; readonly model?: CodexModel; readonly mode?: CodexMode; readonly reasoningEffort?: CodexReasoningEffort; readonly planModeReasoningEffort?: CodexReasoningEffort; readonly resume?: string; readonly workspace?: string; readonly cwd?: string; readonly outputFormat?: CodexOutputFormat; readonly sandbox?: 'read-only' | 'workspace-write' | 'danger-full-access'; readonly skipGitRepoCheck?: boolean; readonly ephemeral?: boolean; readonly timeoutMs?: number; readonly cancellation?: AbortSignal; readonly extraArgs?: readonly string[]; readonly env?: NodeJS.ProcessEnv; }
 export interface CommandExecutionOptions { readonly timeoutMs?: number; readonly cwd?: string; readonly env?: NodeJS.ProcessEnv; readonly signal?: AbortSignal; }
