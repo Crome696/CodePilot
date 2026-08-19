@@ -13,8 +13,8 @@
     "build": "nx run web:build",
     "serve": "nx run web:serve",
     "serve:static": "nx run web:serve-static",
-    "lint": "nx run-many --target=lint --projects=web,web-e2e,ui,data,github,cursor,codex",
-    "test": "nx run-many --target=test --projects=web,ui,data,github,cursor,codex",
+    "lint": "nx run-many --target=lint --projects=web,web-e2e,ui,data,github,codex",
+    "test": "nx run-many --target=test --projects=web,ui,data,github,codex",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "security:check": "npm audit --audit-level=high",
@@ -76,6 +76,7 @@
     "@angular/forms": "~22.0.4",
     "@angular/platform-browser": "~22.0.4",
     "@angular/router": "~22.0.4",
-    "rxjs": "~7.8.0"
+    "rxjs": "~7.8.0",
+    "simple-cursor-cli": "git+https://github.com/Crome696/simple-cursor-cli.git#8ae2a722f6f8cb8242b617eaca7b479d0d316b83"
   }
 }
